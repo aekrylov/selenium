@@ -21,7 +21,7 @@ public class Untitled {
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
 
-    @Test
+    //@Test
     public void testUntitled2() throws Exception {
         driver.get(baseUrl + "/");
         driver.findElement(By.xpath("(//a[contains(text(),'Автоматизация')])[2]")).click();

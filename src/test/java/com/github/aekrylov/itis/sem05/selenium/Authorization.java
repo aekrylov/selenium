@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,12 +23,12 @@ public class Authorization {
     private WebDriver driver;
     private String baseUrl;
 
-    public static final String USERNAME = "test879454";
-    public static final String PASSWORD = "ajsdbd7aolad09";
+    private static final String USERNAME = "test879454";
+    private static final String PASSWORD = "ajsdbd7aolad09";
 
     @Before
     public void setUp() throws Exception {
-        System.setProperty("webdriver.gecko.driver","/home/anth/prog/lib/selenium/geckodriver");
+        System.setProperty("webdriver.gecko.driver","/home/anth/prog/lib/selenium/geckodriver"); // TODO
 
         driver = new FirefoxDriver();
         baseUrl = "https://gist.github.com/";
@@ -37,17 +38,12 @@ public class Authorization {
     @Test
     public void testLogin() {
         login();
-
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.titleContains("Create a new Gist"));
     }
 
     @Test
     public void testPublishSimple() {
         login();
-
-        driver.get(baseUrl);
-
+        
         long now = System.currentTimeMillis();
 
         String gistDesc = "Test gist " + now;
@@ -57,7 +53,7 @@ public class Authorization {
         driver.findElement(By.xpath("//input[contains(@placeholder, 'description')]")).sendKeys(gistDesc);
 
         //write contents
-        driver.findElement(By.className("commit-create")).click();
+        driver.findElement(By.cssSelector(".commit-create pre")).click();
         driver.switchTo().activeElement().sendKeys(gistContents);
 
         //hit create button
@@ -72,9 +68,18 @@ public class Authorization {
 
         driver.findElement(By.xpath("//a[contains(text(), 'Sign in')]")).click();
 
+        wainUntil(10, ExpectedConditions.titleContains("Sign in"));
+
         driver.switchTo().activeElement().sendKeys(USERNAME + Keys.TAB);
         driver.switchTo().activeElement().sendKeys(PASSWORD);
         driver.switchTo().activeElement().submit();
+
+        wainUntil(10, ExpectedConditions.titleContains("Create a new Gist"));
+    }
+
+    private void wainUntil(int seconds, Function<? super WebDriver, ?> conditions) {
+        WebDriverWait wait = new WebDriverWait(driver, seconds);
+        wait.until(conditions);
     }
 
 }
