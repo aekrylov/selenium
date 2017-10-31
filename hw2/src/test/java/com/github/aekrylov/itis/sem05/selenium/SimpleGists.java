@@ -3,6 +3,7 @@ package com.github.aekrylov.itis.sem05.selenium;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,6 +44,7 @@ public class SimpleGists extends TestBase {
         gist.files.add(new Gist.GistFile("file1.txt", "File1 contents " + now));
         gist.files.add(new Gist.GistFile("file2.txt", "File2 contents " + now));
 
+        wainUntil(5, ExpectedConditions.presenceOfElementLocated(By.xpath("//button[contains(text(), 'Add file')]")));
         driver.findElement(By.xpath("//button[contains(text(), 'Add file')]")).click();
 
         List<WebElement> elements = driver.findElements(By.cssSelector(".file.js-code-editor"));
@@ -52,5 +54,7 @@ public class SimpleGists extends TestBase {
 
         //hit create button
         driver.findElement(By.xpath("//*[contains(text(), 'Create secret gist')]")).click();
+
+        //todo asserts
     }
 }
